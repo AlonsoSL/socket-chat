@@ -28,12 +28,17 @@ io.on('connection', (client) => {
 
     });
 
-    client.on('crearMensaje', (data) => {
+    client.on('crearMensaje', (data, callback) => {
 
         let persona = usuarios.getPersona(client.id);
 
         let mensaje = crearMensaje(persona.nombre, data.mensaje);
         client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+        client.broadcast.to(persona.sala).emit('crearMensaje', crearMensaje('Administrador', `${ persona.nombre } se unio`));
+
+        callback(mensaje);
+
+
     });
 
     client.on('disconnect', () => {
